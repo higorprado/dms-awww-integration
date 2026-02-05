@@ -1,0 +1,92 @@
+#!/bin/bash
+# DMS Wallpaper Watcher - Monitors session.json and updates awww when wallpaper changes
+
+SESSION_FILE="$HOME/.local/state/DankMaterialShell/session.json"
+LOG_FILE="/tmp/dms_wallpaper_watcher.log"
+AWWW_OUTPUT="HDMI-A-1"
+
+log() {
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" >> "$LOG_FILE"
+}
+
+get_wallpaper_path() {
+    # Extract wallpaperPath from JSON using grep/sed (no jq dependency)
+    grep -o '"wallpaperPath"[[:space:]]*:[[:space:]]*"[^"]*"' "$SESSION_FILE" 2>/dev/null | sed 's/.*: *"\([^"]*\)".*/\1/'
+}
+
+get_monitor_wallpaper() {
+    local screen_name="$1"
+    # Extract per-monitor wallpaper from JSON
+    # This handles nested monitorWallpapers object
+    grep -o "\"$screen_name\"[[:space:]]*:[[:space:]]*\"[^\"]*\"" "$SESSION_FILE" 2>/dev/null | sed 's/.*: *"\([^"]*\)".*/\1/'
+}
+
+# Main loop
+log "DMS Wallpaper Watcher started"
+log "Monitoring: $SESSION_FILE"
+
+last_wallpaper=""
+
+while true; do
+    # Check if per-monitor wallpaper is enabled
+    per_monitor=$(grep -o '"perMonitorWallpaper"[[:space:]]*:[[:space:]]*[^,}]*' "$SESSION_FILE" 2>/dev/null | sed 's/.*: *//;s/[^a-z]//g')
+
+    if [[ "$per_monitor" == "true" ]]; then
+        # For per-monitor mode, get the first available wallpaper
+        current_wallpaper=$(grep -o '"monitorWallpapers"[[:space:]]*:[[:space:]]*{' -A 100 "$SESSION_FILE" 2>/dev/null | grep -o '":[[:space:]]*"[^"]*"' | head -1 | sed 's/.*: *"\([^"]*\)".*/\1/')
+    else
+        current_wallpaper=$(get_wallpaper_path)
+    fi
+
+    # Check if wallpaper changed and is a valid file (not a color)
+    if [[ -n "$current_wallpaper" && "$current_wallpaper" != "$last_wallpaper" && "$current_wallpaper" != /*#* && ! "$current_wallpaper" =~ ^# ]]; then
+        log "Wallpaper changed: $current_wallpaper"
+
+        if [[ -f "$current_wallpaper" ]]; then
+            # 1. Set wallpaper via awww
+            log "Setting wallpaper via awww..."
+            if command -v awww &>/dev/null; then
+                awww img -o "$AWWW_OUTPUT" "$current_wallpaper" 2>&1 | tee -a "$LOG_FILE"
+                log "awww completed with exit code: $?"
+            else
+                log "ERROR: awww not found in PATH"
+            fi
+
+            # 2. Trigger DMS matugen to update theme colors
+            # DMS normally does this internally when wallpaper changes, but since we're
+            # intercepting the change (calling awww directly), we need to trigger matugen
+            # ourselves using the DMS wrapper to keep themes in sync
+            log "Triggering DMS matugen for theme update..."
+            if command -v dms &>/dev/null; then
+                # Determine current mode (dark/light)
+                is_light=$(grep -o '"isLightMode"[[:space:]]*:[[:space:]]*[^,}]*' "$SESSION_FILE" 2>/dev/null | sed 's/.*: *//')
+                mode="dark"
+                [[ "$is_light" == "true" ]] && mode="light"
+
+                # Get matugen scheme type from settings
+                matugen_type=$(grep -o '"matugenScheme"[[:space:]]*:[[:space:]]*"[^"]*"' "$HOME/.config/DankMaterialShell/settings.json" 2>/dev/null | sed 's/.*: *"\([^"]*\)".*/\1/')
+                [[ -z "$matugen_type" ]] && matugen_type="scheme-tonal-spot"
+
+                dms matugen queue \
+                    --state-dir "$HOME/.cache/DankMaterialShell" \
+                    --shell-dir "/usr/share/quickshell/dms" \
+                    --config-dir "$HOME/.config" \
+                    --kind image \
+                    --value "$current_wallpaper" \
+                    --mode "$mode" \
+                    --matugen-type "$matugen_type" \
+                    --wait 2>&1 | tee -a "$LOG_FILE"
+                log "DMS matugen completed with exit code: $?"
+            else
+                log "WARNING: dms not found in PATH - theme colors not updated"
+            fi
+        else
+            log "WARNING: Wallpaper file does not exist: $current_wallpaper"
+        fi
+
+        last_wallpaper="$current_wallpaper"
+    fi
+
+    # Wait before checking again (poll every second)
+    sleep 1
+done
