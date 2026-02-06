@@ -14,3 +14,11 @@ Thumbs.db
 
 # Local configuration (if any)
 *.local
+
+# Rust build artifacts
+/target/
+Cargo.lock
+*.pdb
+
+# Benchmark results
+/target/criterion/
