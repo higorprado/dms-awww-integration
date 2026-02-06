@@ -1,0 +1,11 @@
+/home/higorprado/code/dms-awww-integration/target/debug/deps/yaml_rust2-3d9f116481358aaa.d: /home/higorprado/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/yaml-rust2-0.10.4/src/lib.rs /home/higorprado/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/yaml-rust2-0.10.4/src/char_traits.rs /home/higorprado/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/yaml-rust2-0.10.4/src/debug.rs /home/higorprado/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/yaml-rust2-0.10.4/src/emitter.rs /home/higorprado/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/yaml-rust2-0.10.4/src/parser.rs /home/higorprado/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/yaml-rust2-0.10.4/src/scanner.rs /home/higorprado/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/yaml-rust2-0.10.4/src/yaml.rs
+
+/home/higorprado/code/dms-awww-integration/target/debug/deps/libyaml_rust2-3d9f116481358aaa.rmeta: /home/higorprado/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/yaml-rust2-0.10.4/src/lib.rs /home/higorprado/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/yaml-rust2-0.10.4/src/char_traits.rs /home/higorprado/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/yaml-rust2-0.10.4/src/debug.rs /home/higorprado/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/yaml-rust2-0.10.4/src/emitter.rs /home/higorprado/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/yaml-rust2-0.10.4/src/parser.rs /home/higorprado/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/yaml-rust2-0.10.4/src/scanner.rs /home/higorprado/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/yaml-rust2-0.10.4/src/yaml.rs
+
+/home/higorprado/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/yaml-rust2-0.10.4/src/lib.rs:
+/home/higorprado/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/yaml-rust2-0.10.4/src/char_traits.rs:
+/home/higorprado/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/yaml-rust2-0.10.4/src/debug.rs:
+/home/higorprado/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/yaml-rust2-0.10.4/src/emitter.rs:
+/home/higorprado/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/yaml-rust2-0.10.4/src/parser.rs:
+/home/higorprado/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/yaml-rust2-0.10.4/src/scanner.rs:
+/home/higorprado/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/yaml-rust2-0.10.4/src/yaml.rs:

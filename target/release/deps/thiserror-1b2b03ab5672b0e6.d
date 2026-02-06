@@ -1,0 +1,14 @@
+/home/higorprado/code/dms-awww-integration/target/release/deps/thiserror-1b2b03ab5672b0e6.d: /home/higorprado/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-2.0.18/src/lib.rs /home/higorprado/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-2.0.18/src/aserror.rs /home/higorprado/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-2.0.18/src/display.rs /home/higorprado/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-2.0.18/src/var.rs /home/higorprado/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-2.0.18/src/private.rs /home/higorprado/code/dms-awww-integration/target/release/build/thiserror-8794917a26392199/out/private.rs
+
+/home/higorprado/code/dms-awww-integration/target/release/deps/libthiserror-1b2b03ab5672b0e6.rlib: /home/higorprado/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-2.0.18/src/lib.rs /home/higorprado/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-2.0.18/src/aserror.rs /home/higorprado/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-2.0.18/src/display.rs /home/higorprado/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-2.0.18/src/var.rs /home/higorprado/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-2.0.18/src/private.rs /home/higorprado/code/dms-awww-integration/target/release/build/thiserror-8794917a26392199/out/private.rs
+
+/home/higorprado/code/dms-awww-integration/target/release/deps/libthiserror-1b2b03ab5672b0e6.rmeta: /home/higorprado/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-2.0.18/src/lib.rs /home/higorprado/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-2.0.18/src/aserror.rs /home/higorprado/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-2.0.18/src/display.rs /home/higorprado/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-2.0.18/src/var.rs /home/higorprado/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-2.0.18/src/private.rs /home/higorprado/code/dms-awww-integration/target/release/build/thiserror-8794917a26392199/out/private.rs
+
+/home/higorprado/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-2.0.18/src/lib.rs:
+/home/higorprado/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-2.0.18/src/aserror.rs:
+/home/higorprado/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-2.0.18/src/display.rs:
+/home/higorprado/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-2.0.18/src/var.rs:
+/home/higorprado/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-2.0.18/src/private.rs:
+/home/higorprado/code/dms-awww-integration/target/release/build/thiserror-8794917a26392199/out/private.rs:
+
+# env-dep:OUT_DIR=/home/higorprado/code/dms-awww-integration/target/release/build/thiserror-8794917a26392199/out

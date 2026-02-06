@@ -1,0 +1,23 @@
+[Unit]
+Description=DMS-AWWW Daemon - Updates awww and matugen when DMS wallpaper changes
+Documentation=https://github.com/higorprado/dms-awww-integration
+After=dms.service
+BindsTo=dms.service
+
+[Service]
+Type=simple
+# Assumes cargo install location, adjust if using different install path
+ExecStart=%h/.cargo/bin/dms-awww
+Restart=always
+RestartSec=5
+
+# Security hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+# Needed paths - adjust as needed
+ReadWritePaths=/tmp %h/.cache/DankMaterialShell
+
+[Install]
+WantedBy=dms.service
