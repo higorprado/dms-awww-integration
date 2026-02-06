@@ -189,11 +189,7 @@ mod tests {
         let mut file = std::fs::File::create(&test_file)?;
         file.write_all(b"{}")?;
 
-        // This test would require more setup for full functionality
-        // For now, just verify the watcher can be created
         let _watcher = FileWatcher::new(&test_file)?;
-        // Note: Actually testing file change detection in a test environment
-        // is tricky due to timing and filesystem behavior
 
         Ok(())
     }

@@ -81,7 +81,6 @@ impl Wallpaper {
 
     /// Check if the wallpaper path is valid (not a color)
     pub fn is_valid_image(&self) -> bool {
-        // Skip color values (e.g., "#ff0000" or "/#ff0000")
         !self.path.starts_with('#') && !self.path.starts_with("/#")
     }
 

@@ -1,166 +1,77 @@
-# dms-awww-integration
+# dms-awww
 
 Efficient wallpaper management for [Dank Material Shell (DMS)](https://github.com/AvengeMedia/DankMaterialShell) using [awww](https://codeberg.org/LGFae/awww).
 
-## Problem
+## Important: Before Installing
 
-DMS stores wallpapers in VRAM for quick transitions and effects. While this provides smooth animations, it consumes significant GPU memory (VRAM). The [awww](https://codeberg.org/LGFae/awww) tool provides a more memory-efficient alternative for setting wallpapers by writing directly to the Wayland compositor (Hyprland) without storing images in VRAM.
+**You MUST disable DMS's built-in wallpaper system first:**
 
-## Solution
+1. Open DMS Settings → Wallpaper
+2. Find "External Wallpaper Management" section
+3. Enable **"Disable Built-in Wallpapers"** toggle
 
-This project provides a watcher service that:
-1. Monitors DMS's `session.json` for wallpaper changes
-2. Applies the new wallpaper via `awww` (efficient, no VRAM usage)
-3. Triggers DMS's matugen to regenerate theme colors to keep everything in sync
+This tells DMS to let external wallpaper tools (like awww) handle wallpapers instead of its VRAM-based system.
 
-This gives you the best of both worlds: DMS's UI and theming with awww's efficient wallpaper rendering.
+## How It Works
+
+- Monitors DMS's `session.json` for wallpaper changes
+- Applies wallpapers via `awww` (no VRAM usage)
+- Triggers DMS's matugen for theme generation
 
 ## Prerequisites
 
-- **Dank Material Shell (DMS)** - Installed and configured ([Github](https://github.com/AvengeMedia/DankMaterialShell))
-- **awww** - Wallpaper utility for Hyprland ([Codeberg](https://codeberg.org/LGFae/awww))
-- **matugen** - Material Design color generator (typically comes with DMS)
-- **systemd** - For service management
+- DMS (with "Disable Built-in Wallpapers" enabled)
+- awww daemon running (`awww-daemon &`)
+- Rust toolchain (required to build the binary)
 
-### Installing awww
+### Installing Rust
 
+**Arch Linux / Manjaro:**
 ```bash
-# From AUR (if using Arch/Manjaro)
-paru -S awww
+sudo pacman -S rust
+```
 
-# Or build from source
-git clone https://codeberg.org/LGFae/awww
-cd awww
-cargo build --release
-sudo install target/release/awww /usr/bin/
+**Other distributions (via rustup):**
+```bash
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+source "$HOME/.cargo/env"
+```
+
+**Verify installation:**
+```bash
+cargo --version
 ```
 
 ## Installation
 
-1. **Clone this repository:**
-   ```bash
-   git clone https://github.com/yourusername/dms-awww-integration.git ~/code/dms-awww-integration
-   cd ~/code/dms-awww-integration
-   ```
+```bash
+git clone https://github.com/higorprado/dms-awww-integration.git
+cd dms-awww-integration
+./install.sh
+```
 
-2. **Install the watcher script:**
-   ```bash
-   cp bin/dms-wallpaper-watcher ~/.local/bin/
-   chmod +x ~/.local/bin/dms-wallpaper-watcher
-   ```
-
-3. **Install the systemd service:**
-   ```bash
-   cp systemd/dms-wallpaper-watcher.service ~/.config/systemd/user/
-   ```
-
-4. **Edit the service if needed** (e.g., different username):
-   ```bash
-   nano ~/.config/systemd/user/dms-wallpaper-watcher.service
-   ```
-
-5. **Enable and start the service:**
-   ```bash
-   systemctl --user daemon-reload
-   systemctl --user enable dms-wallpaper-watcher.service
-   systemctl --user start dms-wallpaper-watcher.service
-   ```
-
-6. **Verify installation:**
-   ```bash
-   ./test.sh
-   ```
+Enable the service:
+```bash
+systemctl --user enable dms-awww.service
+systemctl --user start dms-awww.service
+```
 
 ## Usage
 
-Once installed and enabled, the service runs automatically:
-- It starts when DMS starts
-- It stops when DMS stops
-- Changes wallpapers via awww when you change them in DMS
-- Regenerates theme colors via DMS's matugen
-
-### Changing Wallpapers
-
-Use DMS's normal wallpaper picker (typically via the right-click menu or DMS settings). The watcher will detect the change and apply it via awww.
-
-## Configuration
-
-The watcher script has a few configurable variables at the top:
-
-```bash
-SESSION_FILE="$HOME/.local/state/DankMaterialShell/session.json"
-LOG_FILE="/tmp/dms_wallpaper_watcher.log"
-AWWW_OUTPUT="HDMI-A-1"  # Your monitor output name
-```
-
-To find your monitor output name:
-```bash
-hyprctl monitors | grep "Monitor"
-```
+Change wallpapers through DMS as normal. The daemon detects changes and applies them via awww automatically.
 
 ## Troubleshooting
 
-### Service not running
+**Service not working:**
+```bash
+systemctl --user status dms-awww.service
+journalctl --user -u dms-awww.service -n 50
+```
+
+**awww errors:** Make sure `awww-daemon` is running before starting the service.
+
+## Uninstallation
 
 ```bash
-# Check service status
-systemctl --user status dms-wallpaper-watcher.service
-
-# View service logs
-journalctl --user -u dms-wallpaper-watcher.service -f
-
-# Check watcher log
-tail -f /tmp/dms_wallpaper_watcher.log
+./uninstall.sh
 ```
-
-### Wallpaper not changing
-
-1. Verify awww is installed and working:
-   ```bash
-   which awww
-   awww img -o HDMI-A-1 /path/to/image.jpg
-   ```
-
-2. Check the correct output name for your monitor:
-   ```bash
-   hyprctl monitors
-   ```
-
-3. Update `AWWW_OUTPUT` in the watcher script if needed.
-
-### Theme colors not updating
-
-1. Verify DMS matugen is working:
-   ```bash
-   dms matugen queue --help
-   ```
-
-2. Check the watcher log for errors:
-   ```bash
-   tail -f /tmp/dms_wallpaper_watcher.log
-   ```
-
-## File Structure
-
-```
-dms-awww-integration/
-├── bin/
-│   └── dms-wallpaper-watcher    # Main watcher script
-├── systemd/
-│   └── dms-wallpaper-watcher.service  # systemd user unit
-├── README.md                    # This file
-├── ARCHITECTURE.md              # Detailed design documentation
-└── test.sh                      # Installation verification script
-```
-
-## How It Works
-
-See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed information about the problem, solution, and design decisions.
-
-## License
-
-MIT
-
-## Contributing
-
-Contributions are welcome! Feel free to open issues or pull requests.

@@ -126,8 +126,6 @@ pub struct MatugenConfig {
     pub shell_dir: String,
 }
 
-// Default functions for serde
-
 fn default_log_level() -> String {
     DEFAULT_LOG_LEVEL.to_string()
 }
