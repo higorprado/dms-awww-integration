@@ -2,7 +2,6 @@
 
 mod common;
 
-use std::fs;
 use std::path::Path;
 
 use common::{create_test_image, SessionFixture, SettingsFixture};
@@ -133,10 +132,11 @@ fn test_executor_per_monitor_wallpapers() {
 
     let executor = Executor::new(Config::default(), vec!["HDMI-A-1".to_string(), "DP-1".to_string()]);
 
-    // Verify state has correct monitor assignments
+    // Verify state has correct monitor assignments (order not guaranteed with HashMap)
     assert_eq!(state.wallpapers.len(), 2);
-    assert_eq!(state.wallpapers[0].monitor, Some("HDMI-A-1".to_string()));
-    assert_eq!(state.wallpapers[1].monitor, Some("DP-1".to_string()));
+    let monitors: Vec<_> = state.wallpapers.iter().filter_map(|w| w.monitor.as_ref()).collect();
+    assert!(monitors.contains(&&"HDMI-A-1".to_string()));
+    assert!(monitors.contains(&&"DP-1".to_string()));
 }
 
 #[test]

@@ -421,11 +421,6 @@ impl Config {
         PathBuf::from(&self.dms.cache_dir)
     }
 
-    /// Get the expanded log file path
-    pub fn log_file_path(&self) -> PathBuf {
-        PathBuf::from(&self.general.log_file)
-    }
-
     /// Check if awww is enabled
     pub fn awww_enabled(&self) -> bool {
         self.awww.enabled

@@ -11,13 +11,16 @@ ExecStart=%h/.cargo/bin/dms-awww
 Restart=always
 RestartSec=5
 
+# Import Wayland environment
+EnvironmentFile=-%h/.config/dms-awww/environment
+
 # Security hardening
 NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=strict
 ProtectHome=read-only
 # Needed paths - adjust as needed
-ReadWritePaths=/tmp %h/.cache/DankMaterialShell
+ReadWritePaths=/tmp %h/.cache/DankMaterialShell /run/user/%U
 
 [Install]
 WantedBy=dms.service

@@ -4,7 +4,6 @@ mod common;
 
 use std::env;
 use std::fs;
-use std::path::PathBuf;
 use serial_test::serial;
 
 // Import from the main crate

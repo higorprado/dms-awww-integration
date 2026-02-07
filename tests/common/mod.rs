@@ -100,14 +100,6 @@ impl SessionFixture {
         file.write_all(self.build_json().as_bytes()).unwrap();
         session_path
     }
-
-    /// Create a temporary directory with this session file
-    #[allow(dead_code)]
-    pub fn create_temp_dir(&self) -> TempDir {
-        let dir = TempDir::new().unwrap();
-        self.write_to(dir.path());
-        dir
-    }
 }
 
 /// Test fixture builder for creating test DMS settings files
@@ -134,13 +126,6 @@ impl SettingsFixture {
     /// Set the matugen scheme
     pub fn matugen_scheme(mut self, scheme: impl Into<String>) -> Self {
         self.matugen_scheme = Some(scheme.into());
-        self
-    }
-
-    /// Add an extra field
-    #[allow(dead_code)]
-    pub fn field(mut self, key: impl Into<String>, value: impl Into<String>) -> Self {
-        self.other_fields.push((key.into(), value.into()));
         self
     }
 
@@ -238,27 +223,6 @@ impl ConfigFixture {
         }
         self
     }
-
-    /// Add custom content
-    pub fn custom(mut self, content: &str) -> Self {
-        self.content.push_str(content);
-        self
-    }
-
-    /// Write the config to a file
-    pub fn write_to(&self, path: &Path) {
-        let mut file = File::create(path).unwrap();
-        file.write_all(self.content.as_bytes()).unwrap();
-    }
-
-    /// Create a config directory with this file
-    pub fn create_temp_config(&self, filename: &str) -> TempDir {
-        let dir = TempDir::new().unwrap();
-        let config_dir = dir.path().join("dms-awww");
-        fs::create_dir_all(&config_dir).unwrap();
-        self.write_to(&config_dir.join(filename));
-        dir
-    }
 }
 
 /// Create a temporary test image file (minimal PNG)
@@ -281,29 +245,6 @@ pub fn create_test_image(path: &Path) {
         0xAE, 0x42, 0x60, 0x82, // CRC
     ];
     fs::write(path, png_data).unwrap();
-}
-
-/// Create a mock niri msg outputs response
-pub fn mock_niri_outputs() -> String {
-    r#"[{
-        "name": "HDMI-A-1",
-        "enabled": true,
-        "make": "Dell",
-        "model": "U2720Q",
-        "resolution": {"width": 3840, "height": 2160},
-        "position": {"x": 0, "y": 0},
-        "refresh_rate": 60.0,
-        "physicalSize": {"width": 597, "height": 336}
-    }, {
-        "name": "DP-1",
-        "enabled": true,
-        "make": "LG",
-        "model": "27GN950",
-        "resolution": {"width": 3840, "height": 2160},
-        "position": {"x": 3840, "y": 0},
-        "refresh_rate": 144.0,
-        "physicalSize": {"width": 597, "height": 336}
-    }]"#.to_string()
 }
 
 #[cfg(test)]
