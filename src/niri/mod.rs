@@ -223,25 +223,30 @@ fn parse_niri_outputs(stdout: &[u8]) -> Result<Vec<String>> {
     Ok(enabled_outputs)
 }
 
-/// Parse niri outputs from text format (fallback)
-/// Only returns enabled monitors (those with a current mode, not "Disabled")
+/// Parse niri outputs from text format (fallback).
+///
+/// Prefers enabled outputs. If none are enabled (e.g. niri reports all as
+/// "Disabled" for unconfigured or VRR-disabled outputs), falls back to
+/// returning all detected output names so awww can still target them.
 fn parse_niri_outputs_text(stdout: &[u8]) -> Result<Vec<String>> {
     let text = String::from_utf8_lossy(stdout);
-    let mut outputs = Vec::new();
+    let mut enabled_outputs = Vec::new();
+    let mut all_outputs = Vec::new();
     let mut current_name: Option<String> = None;
     let mut is_disabled = false;
 
     for line in text.lines() {
         // Look for lines like: Output "Samsung..." (HDMI-A-1)
         if let Some(rest) = line.strip_prefix("Output ") {
-            // Save the previous output if it was enabled
+            // Flush previous output
             if let Some(ref name) = current_name {
+                all_outputs.push(name.clone());
                 if !is_disabled {
-                    outputs.push(name.clone());
+                    enabled_outputs.push(name.clone());
                 }
             }
 
-            // Find the output name in parentheses
+            // Extract the connector name from parentheses
             if let Some(start) = rest.find('(') {
                 if let Some(end) = rest[start..].find(')') {
                     current_name = Some(rest[start + 1..start + end].to_string());
@@ -253,18 +258,25 @@ fn parse_niri_outputs_text(stdout: &[u8]) -> Result<Vec<String>> {
         }
     }
 
-    // Don't forget the last output
+    // Flush last output
     if let Some(ref name) = current_name {
+        all_outputs.push(name.clone());
         if !is_disabled {
-            outputs.push(name.clone());
+            enabled_outputs.push(name.clone());
         }
     }
 
-    if outputs.is_empty() {
-        return Err(DmsAwwwError::NoMonitorsDetected);
+    if !enabled_outputs.is_empty() {
+        return Ok(enabled_outputs);
     }
 
-    Ok(outputs)
+    // All outputs were disabled — still return them so awww can target them.
+    if !all_outputs.is_empty() {
+        tracing::debug!("All niri outputs are disabled; targeting them anyway: {:?}", all_outputs);
+        return Ok(all_outputs);
+    }
+
+    Err(DmsAwwwError::NoMonitorsDetected)
 }
 
 /// Helper to get outputs with fallback behavior

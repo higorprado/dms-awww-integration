@@ -143,7 +143,11 @@ impl Executor {
             cmd.arg(arg);
         }
 
-        cmd.args(["img", "-o", monitor, path]);
+        if monitor == "ALL" {
+            cmd.args(["img", path]);
+        } else {
+            cmd.args(["img", "-o", monitor, path]);
+        }
 
         let output = cmd.output().await?;
 
